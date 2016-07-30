@@ -1,0 +1,22 @@
+{
+  "name": "dumplings",
+  "version": "1.0.0",
+  "description": "just for happy",
+  "main": "index.js",
+  "scripts": {
+    "test": "dumplings"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Chandler0415/dumplings.git"
+  },
+  "keywords": [
+    "dumplings"
+  ],
+  "author": "Chandler",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Chandler0415/dumplings/issues"
+  },
+  "homepage": "https://github.com/Chandler0415/dumplings#readme"
+}
