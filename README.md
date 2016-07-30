@@ -1,9 +1,7 @@
 #just for happy
-#today is 2016/07/30
-#some interesting things from this.
-#go go go
-#
-#
+##today is 2016/07/30
+##some interesting things from this.
+##go go go
 #主要目录结构
 - webapp/             # webapp根目录
 - src/                # 开发目录
