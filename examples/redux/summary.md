@@ -191,7 +191,7 @@ let { subscribe, dispatch, getState } = createStore(reducer);
 let store = createStore(todoApp, window.STATE_FROM_SERVER)
 ```
 
-上面代码中，**window.STATE_FROM_SERVER**就是整个应用的状态初始值。注意，如果提供了这个参数，它会覆盖 Reducer 函数的默认初始值。
+上面代码中，**window.STATE\_FROM_SERVER**就是整个应用的状态初始值。注意，如果提供了这个参数，它会覆盖 Reducer 函数的默认初始值。
 下面是**createStore**方法的一个简单实现，可以了解一下 Store 是怎么生成的。
 
 ```
