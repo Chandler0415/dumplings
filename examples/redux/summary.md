@@ -129,3 +129,92 @@ const total = actions.reduce(reducer, 0); // 3
 
 上面代码中，数组**actions**表示依次有三个 Action，分别是加0、加1和加2。数组的**reduce**方法接受 Reducer 函数作为参数，就可以直接得到最终的状态3。
 
+###3.7 纯函数
+Reducer 函数最重要的特征是，它是一个纯函数。也就是说，只要是同样的输入，必定得到同样的输出。
+纯函数是函数式编程的概念，必须遵守以下一些约束。
+不得改写参数
+不能调用系统 I/O 的API
+不能调用Date.now()或者Math.random()等不纯的方法，因为每次会得到不一样的结果
+由于 Reducer 是纯函数，就可以保证同样的State，必定得到同样的 View。但也正因为这一点，Reducer 函数里面不能改变 State，必须返回一个全新的对象，请参考下面的写法。
+
+```
+// State 是一个对象
+function reducer(state, action) {
+  return Object.assign({}, state, { thingToChange });
+  // 或者
+  return { ...state, ...newState };
+}
+// State 是一个数组
+function reducer(state, action) {
+  return [...state, newItem];
+}
+```
+
+最好把 State 对象设成只读。你没法改变它，要得到新的 State，唯一办法就是生成一个新对象。这样的好处是，任何时候，与某个 View 对应的 State 总是一个不变的对象。
+
+###3.8 store.subscribe()
+Store 允许使用**store.subscribe**方法设置监听函数，一旦 State 发生变化，就自动执行这个函数。
+
+```
+import { createStore } from 'redux';
+const store = createStore(reducer);
+store.subscribe(listener);
+```
+
+显然，只要把 View 的更新函数（对于 React 项目，就是组件的**render**方法或**setState**方法）放入listen，就会实现 View 的自动渲染。
+**store.subscribe**方法返回一个函数，调用这个函数就可以解除监听。
+
+```
+let unsubscribe = store.subscribe(() =>
+  console.log(store.getState())
+);
+unsubscribe();
+```
+
+##四、Store 的实现
+上一节介绍了 Redux 涉及的基本概念，可以发现 Store 提供了三个方法。
+
+```
+store.getState()
+store.dispatch()
+store.subscribe()
+```
+
+```
+import { createStore } from 'redux';
+let { subscribe, dispatch, getState } = createStore(reducer);
+```
+
+**createStore**方法还可以接受第二个参数，表示 State 的最初状态。这通常是服务器给出的。
+
+```
+let store = createStore(todoApp, window.STATE_FROM_SERVER)
+```
+
+上面代码中，**window.STATE_FROM_SERVER**就是整个应用的状态初始值。注意，如果提供了这个参数，它会覆盖 Reducer 函数的默认初始值。
+下面是**createStore**方法的一个简单实现，可以了解一下 Store 是怎么生成的。
+
+```
+const createStore = (reducer) => {
+  let state;
+  let listeners = [];
+
+  const getState = () => state;
+
+  const dispatch = (action) => {
+    state = reducer(state, action);
+    listeners.forEach(listener => listener());
+  };
+
+  const subscribe = (listener) => {
+    listeners.push(listener);
+    return () => {
+      listeners = listeners.filter(l => l !== listener);
+    }
+  };
+
+  dispatch({});
+
+  return { getState, dispatch, subscribe };
+};
+```
