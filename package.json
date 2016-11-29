@@ -20,6 +20,7 @@
   },
   "homepage": "https://github.com/Chandler0415/dumplings#readme",
   "devDependencies": {
+    "es-checker": "^1.4.0",
     "webpack": "^1.13.3"
   },
   "dependencies": {
