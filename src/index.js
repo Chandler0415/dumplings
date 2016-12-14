@@ -1,16 +1,9 @@
-/* eslint strict: ["error", "global"] */
+var tpl = '<div>' +
+  '<h1>这里是公用的头</h1>' +
+  '</div>';
 
 
-class Parent extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {}
-  }
-  render() {
-    return (
-      <div className={this.props.name}>
-			<Child/>
-			</div>
-    );
-  }
-}
+var body = document.getElementsByTagName('body')[0];
+
+//insert到body的最前面
+//
