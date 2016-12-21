@@ -218,3 +218,150 @@ const createStore = (reducer) => {
   return { getState, dispatch, subscribe };
 };
 ```
+
+##五、Reducer 的拆分
+Reducer 函数负责生成 State。由于整个应用只有一个 State 对象，包含所有数据，对于大型应用来说，这个 State 必然十分庞大，导致 Reducer 函数也十分庞大。
+请看下面的例子。
+
+```
+const chatReducer = (state = defaultState, action = {}) => {
+  const { type, payload } = action;
+  switch (type) {
+    case ADD_CHAT:
+      return Object.assign({}, state, {
+        chatLog: state.chatLog.concat(payload)
+      });
+    case CHANGE_STATUS:
+      return Object.assign({}, state, {
+        statusMessage: payload
+      });
+    case CHANGE_USERNAME:
+      return Object.assign({}, state, {
+        userName: payload
+      });
+    default: return state;
+  }
+};
+```
+
+上面代码中，三种 Action 分别改变 State 的三个属性。
+
+```
+ADD_CHAT：chatLog属性
+CHANGE_STATUS：statusMessage属性
+CHANGE_USERNAME：userName属性
+```
+
+这三个属性之间没有联系，这提示我们可以把 Reducer 函数拆分。不同的函数负责处理不同属性，最终把它们合并成一个大的 Reducer 即可。
+
+```
+const chatReducer = (state = defaultState, action = {}) => {
+  return {
+    chatLog: chatLog(state.chatLog, action),
+    statusMessage: statusMessage(state.statusMessage, action),
+    userName: userName(state.userName, action)
+  }
+};
+```
+
+上面代码中，Reducer 函数被拆成了三个小函数，每一个负责生成对应的属性。
+这样一拆，Reducer 就易读易写多了。而且，这种拆分与 React 应用的结构相吻合：一个 React 根组件由很多子组件构成。这就是说，子组件与子 Reducer 完全可以对应。
+Redux 提供了一个**combineReducers**方法，用于 Reducer 的拆分。你只要定义各个子 Reducer 函数，然后用这个方法，将它们合成一个大的 Reducer。
+
+```
+import { combineReducers } from 'redux';
+const chatReducer = combineReducers({
+  chatLog,
+  statusMessage,
+  userName
+})
+export default todoApp;
+```
+
+上面的代码通过**combineReducers**方法将三个子 Reducer 合并成一个大的函数。
+这种写法有一个前提，就是 State 的属性名必须与子 Reducer 同名。如果不同名，就要采用下面的写法。
+
+```
+const reducer = combineReducers({
+  a: doSomethingWithA,
+  b: processB,
+  c: c
+})
+
+// 等同于
+function reducer(state = {}, action) {
+  return {
+    a: doSomethingWithA(state.a, action),
+    b: processB(state.b, action),
+    c: c(state.c, action)
+  }
+}
+```
+
+总之，**combineReducers()**做的就是产生一个整体的 Reducer 函数。该函数根据 State 的 key 去执行相应的子 Reducer，并将返回结果合并成一个大的 State 对象。
+下面是**combineReducer**的简单实现。
+
+```
+const combineReducers = reducers => {
+  return (state = {}, action) => {
+    return Object.keys(reducers).reduce(
+      (nextState, key) => {
+        nextState[key] = reducers[key](state[key], action);
+        return nextState;
+      },
+      {} 
+    );
+  };
+};
+```
+
+你可以把所有子 Reducer 放在一个文件里面，然后统一引入。
+
+```
+import { combineReducers } from 'redux'
+import * as reducers from './reducers'
+const reducer = combineReducers(reducers)
+```
+
+##异步操作  
+[更多...](http://www.ruanyifeng.com/blog/2016/09/redux_tutorial_part_two_async_operations.html)   
+同步操作只要发出一种 Action 即可，异步操作的差别是它要发出三种 Action。
+
+```
+* 操作发起时的 Action
+* 操作成功时的 Action
+* 操作失败时的 Action
+```
+
+以向服务器取出数据为例，三种 Action 可以有两种不同的写法。
+
+```
+// 写法一：名称相同，参数不同
+{ type: 'FETCH_POSTS' }
+{ type: 'FETCH_POSTS', status: 'error', error: 'Oops' }
+{ type: 'FETCH_POSTS', status: 'success', response: { ... } }
+
+// 写法二：名称不同
+{ type: 'FETCH_POSTS_REQUEST' }
+{ type: 'FETCH_POSTS_FAILURE', error: 'Oops' }
+{ type: 'FETCH_POSTS_SUCCESS', response: { ... } }
+```
+
+除了 Action 种类不同，异步操作的 State 也要进行改造，反映不同的操作状态。下面是 State 的一个例子。
+
+```
+let state = {
+  // ... 
+  isFetching: true,
+  didInvalidate: true,
+  lastUpdated: 'xxxxxxx'
+};
+```
+
+上面代码中，State 的属性**isFetching**表示是否在抓取数据。**didInvalidate**表示数据是否过时，**lastUpdated**表示上一次更新时间。
+现在，整个异步操作的思路就很清楚了。
+
+```
+* 操作开始时，送出一个 Action，触发 State 更新为"正在操作"状态，View 重新渲染
+* 操作结束后，再送出一个 Action，触发 State 更新为"操作结束"状态，View 再一次重新渲染
+```
