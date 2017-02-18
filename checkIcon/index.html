@@ -22,54 +22,54 @@
   }
   
   #check1::before {
-    position: absolute;
     top: 85px;
     left: 44px;
-    width: 15px;
-    height: 80px;
-    background: #fff;
-    content: "";
+    height: 5pc;
     transform: rotate(-43deg);
   }
   
-  #check1::after {
+  #check1::after,
+  #check1::before {
     position: absolute;
-    top: 46px;
-    left: 111px;
     width: 15px;
-    height: 130px;
+    border-radius: 5px;
     background: #fff;
     content: "";
+  }
+  
+  #check1::after {
+    top: 46px;
+    left: 111px;
+    height: 130px;
     transform: rotate(50deg);
   }
   
   #check2 {
     box-sizing: border-box;
-    border: 15px deepskyblue solid;
+    border: 15px solid #00bfff;
     border-radius: 100%;
   }
   
   #check2::before {
-    position: absolute;
     top: 70px;
-    left: 32px;
-    width: 15px;
-    height: 80px;
-    background: deepskyblue;
-    content: "";
+    left: 2pc;
+    height: 5pc;
     transform: rotate(-43deg);
   }
   
-  #check2::after {
+  #check2::after,
+  #check2::before {
     position: absolute;
-    position: absolute;
-    top: 33px;
-    left: 100px;
     width: 15px;
+    border-radius: 5px;
+    background: #00bfff;
+    content: "";
+  }
+  
+  #check2::after {
+    top: 33px;
+    left: 75pt;
     height: 130px;
-    background: deepskyblue;
-    content: "";
-    content: "";
     transform: rotate(50deg);
   }
   </style>
