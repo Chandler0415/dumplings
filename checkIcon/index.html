@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+  <style>
+  .fl {
+    float: left;
+  }
+  
+  .icon {
+    position: relative;
+    margin: 30px;
+    width: 200px;
+    height: 200px;
+  }
+  
+  #check1 {
+    border-radius: 100%;
+    background-color: #00bfff;
+  }
+  
+  #check1::before {
+    position: absolute;
+    top: 85px;
+    left: 44px;
+    width: 15px;
+    height: 80px;
+    background: #fff;
+    content: "";
+    transform: rotate(-43deg);
+  }
+  
+  #check1::after {
+    position: absolute;
+    top: 46px;
+    left: 111px;
+    width: 15px;
+    height: 130px;
+    background: #fff;
+    content: "";
+    transform: rotate(50deg);
+  }
+  
+  #check2 {
+    box-sizing: border-box;
+    border: 15px deepskyblue solid;
+    border-radius: 100%;
+  }
+  
+  #check2::before {
+    position: absolute;
+    top: 70px;
+    left: 32px;
+    width: 15px;
+    height: 80px;
+    background: deepskyblue;
+    content: "";
+    transform: rotate(-43deg);
+  }
+  
+  #check2::after {
+    position: absolute;
+    position: absolute;
+    top: 33px;
+    left: 100px;
+    width: 15px;
+    height: 130px;
+    background: deepskyblue;
+    content: "";
+    content: "";
+    transform: rotate(50deg);
+  }
+  </style>
+</head>
+
+<body>
+  <div id="check1" class="fl icon"></div>
+  <div id="check2" class="fl icon"></div>
+</body>
+
+</html>
