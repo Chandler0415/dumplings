@@ -1,0 +1,67 @@
+.fl {
+    float: left;
+}
+
+.icon {
+    position: relative;
+    margin: 30px;
+    width: 200px;
+    height: 200px;
+}
+
+#check1 {
+    border-radius: 100%;
+    background-color: #00bfff;
+}
+
+#check1::before {
+    top: 85px;
+    left: 44px;
+    height: 5pc;
+    transform: rotate(-43deg);
+}
+
+#check1::after,
+#check1::before {
+    position: absolute;
+    width: 15px;
+    border-radius: 5px;
+    background: #fff;
+    content: "";
+}
+
+#check1::after {
+    top: 46px;
+    left: 111px;
+    height: 130px;
+    transform: rotate(50deg);
+}
+
+#check2 {
+    box-sizing: border-box;
+    border: 15px solid #00bfff;
+    border-radius: 100%;
+}
+
+#check2::before {
+    top: 70px;
+    left: 2pc;
+    height: 5pc;
+    transform: rotate(-43deg);
+}
+
+#check2::after,
+#check2::before {
+    position: absolute;
+    width: 15px;
+    border-radius: 5px;
+    background: #00bfff;
+    content: "";
+}
+
+#check2::after {
+    top: 33px;
+    left: 75pt;
+    height: 130px;
+    transform: rotate(50deg);
+}
